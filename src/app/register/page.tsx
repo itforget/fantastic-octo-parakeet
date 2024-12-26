@@ -1,23 +1,31 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
+    setLoading(true);
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    const data = await res.json();
-    router.push("/");
-    return data;
+      const data = await res.json();
+      router.push("/");
+      return data;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,7 +57,13 @@ export default function Register() {
           onClick={handleRegister}
           className="w-full py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition"
         >
-          Register
+          {!loading ? (
+            "Register"
+          ) : (
+            <div className="animate-spin">
+              <FontAwesomeIcon icon={faCircleNotch} />
+            </div>
+          )}
         </button>
       </div>
     </div>
