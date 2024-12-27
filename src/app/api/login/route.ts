@@ -2,19 +2,23 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
+// Schema de validação com Zod
+const loginSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { message: "All fields are required" },
-        { status: 400 }
-      );
-    }
+    // Validação dos dados
+    const parsedData = loginSchema.parse(body);
+    const { email, password } = parsedData;
 
     const user = await prisma.user.findUnique({ where: { email } });
 
@@ -43,6 +47,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ token, user }, { status: 200 });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          message: "Validation error",
+          errors: error.errors.map((err) => err.message),
+        },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       { message: "Error logging in", error },
       { status: 500 }

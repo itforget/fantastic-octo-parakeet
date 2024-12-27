@@ -5,7 +5,7 @@ import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "./themeToggle";
 
 export default function Header() {
-  const { data: user, loading, error } = useProtectedData();
+  const { data: user, loading } = useProtectedData();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -13,22 +13,11 @@ export default function Header() {
     router.push("/");
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center bg-indigo-600 p-6 text-xl font-bold">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
   return (
     <header className="bg-indigo-600 p-4 text-white dark:bg-gray-700">
       <div className="container mx-auto flex justify-between items-center ">
         <h1 className="text-xl font-semibold">Dashboard</h1>
-        <span>Olá, {user ? user.name.toLocaleUpperCase() : "Usuário"}</span>
+        <span>Olá, {user?.name.toLocaleUpperCase()}</span>
         <div className="flex items-center gap-4">
           <button
             onClick={handleLogout}

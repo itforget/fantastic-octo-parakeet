@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 interface ProtectedData {
   name: string;
-  email: string
+  email: string;
 }
 
 export const useProtectedData = () => {
@@ -24,7 +24,7 @@ export const useProtectedData = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch protected data");
+          throw new Error("Token not provided");
         }
 
         const result = await response.json();
