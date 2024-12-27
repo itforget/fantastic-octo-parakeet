@@ -29,7 +29,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
       <h1 className="text-4xl font-bold text-gray-800 mb-6">Register</h1>
       <div className="w-full max-w-md p-6 bg-white shadow-md rounded-lg">
         <input
